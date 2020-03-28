@@ -40,7 +40,7 @@ namespace YoutubeDownloader.ViewModels.Components
         /// <summary>
         ///  Event raise when download finished
         /// </summary>
-        public event EventHandler<EventArgs> Finished;
+        public event EventHandler<EventArgs> TaskEnded;
 
         bool _isSuccessful = false;
         public bool IsSuccessful
@@ -52,17 +52,51 @@ namespace YoutubeDownloader.ViewModels.Components
             private set
             {
                 _isSuccessful = value;
+                IsActive = false;
                 if (value)
                 {
-                    if (Finished != null)
-                        this.Finished(this, new EventArgs());
+                    if (TaskEnded != null)
+                        this.TaskEnded(this, new EventArgs());
                 }
             }
         }
 
-        public bool IsCanceled { get; private set; }
-
-        public bool IsFailed { get; private set; }
+        bool _isCanceled=false;
+        public bool IsCanceled
+        {
+            get
+            {
+                return _isCanceled;
+            }
+            private set
+            {
+                _isCanceled = value;
+                IsActive = false;
+                if (value)
+                {
+                    if (TaskEnded != null)
+                        this.TaskEnded(this, new EventArgs());
+                }
+            }
+        }
+        bool _isFailed = false;
+        public bool IsFailed
+        {
+            get
+            {
+                return _isFailed;
+            }
+            private set
+            {
+                _isFailed = value;
+                IsActive = false;
+                if (value)
+                {
+                    if (TaskEnded != null)
+                        this.TaskEnded(this, new EventArgs());
+                }
+            }
+        }
 
         public string? FailReason { get; private set; }
 

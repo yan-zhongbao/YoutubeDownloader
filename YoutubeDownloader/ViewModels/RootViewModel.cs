@@ -137,7 +137,7 @@ namespace YoutubeDownloader.ViewModels
             download.ProgressManager = ProgressManager;
 
             // Use Finished event to start the new task
-            download.Finished += Download_Finished;
+            download.TaskEnded += Download_Finished;
             //Here to control only start by MaxConcurrentDownloadCount
             if (Downloads.Count(t => t.IsActive == true) < _settingsService.MaxConcurrentDownloadCount)
                 // Start download
@@ -149,7 +149,7 @@ namespace YoutubeDownloader.ViewModels
             // I think need to check the count here ,because some one can stop and restart a lot of task
             if (Downloads.Count(t => t.IsActive == true) < _settingsService.MaxConcurrentDownloadCount)
             {
-                var download = Downloads.FirstOrDefault(t => t.CanRestart == true);
+                var download = Downloads.FirstOrDefault(t => t.CanRestart == true&&t.IsCanceled!=true);
                 //if download is null, there is no task leave
                 if (download != null)
                     download.Start();
